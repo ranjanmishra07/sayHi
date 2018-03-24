@@ -1,0 +1,57 @@
+<!DOCTYPE html> 
+<html>
+<head>
+	<link rel="stylesheet" href="/css/bootstrap.css" />
+	<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+<div class="container">
+<h2 class="page-header">Dashboard</h2>
+<p>Welcome to your dashboard, Say hi to your friends by clicking on hi</p>
+<p><input type="button" value="Hi" id="hi" /></p>
+<p id='messages'></p>
+<h3>history of conversation:</h3>
+<table class="table">
+    <thead>
+      <tr>
+        <th>user id</th>
+        <th>email</th>
+        <th>time of message</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td id='userid'></td>
+        <td id='useremail'></td>
+        <td id='messagetime'></td>
+      </tr>
+    </tbody>
+  </table>
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+<script src="http://momentjs.com/downloads/moment-with-locales.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  $(function () {
+    var socket = io();
+    $('#hi').click(function(){
+      socket.emit('message','hi has been sent by:{{user.email}} ');
+    });
+    socket.on('message', function(msg){
+      var formattedTime=moment().format('LLL');
+      console.log(formattedTime)
+      $('#messages').append($('<li>')).text(msg);
+      $('#userid').append('<tr><td>{{user._id}}</td></tr>')
+      $('#useremail').append('<tr><td>{{user.email}}</td></tr>')
+      $('#messagetime').append(`<tr><td>${formattedTime}</td></tr>`)
+      
+    
+    });
+    
+  });
+
+</script>
+</div>
+</body>
+</html>
+
